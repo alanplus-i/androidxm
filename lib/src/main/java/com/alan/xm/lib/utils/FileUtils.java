@@ -129,4 +129,16 @@ public class FileUtils {
         return LApplication.app.getCacheDir().getPath();
     }
 
+    /**
+     * 获取外部存储目录
+     *
+     * @return /storage/sdcard/Android/data/package_name/'name'
+     */
+    public static String getExtFilePath(String name) {
+        if (LApplication.app == null) {
+            return "";
+        }
+        return LApplication.app.getExternalFilesDir(name).getPath();
+    }
+
 }

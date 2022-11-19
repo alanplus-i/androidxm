@@ -17,6 +17,7 @@ public class SpUtils {
     private static SpUtils spUtils;
 
     private static final String KEY_LIB_XM_LOG_NAME = "key_lib_xm_log_name";
+    private static final String KEY_LIB_XM_EXT_LOG_NAME = "key_lib_xm_ext_log_name";
 
     private SpUtils() {
         if (LApplication.app == null) {
@@ -46,8 +47,21 @@ public class SpUtils {
         return logName;
     }
 
+    public String getExtLogName() {
+        String logName = sp.getString(KEY_LIB_XM_EXT_LOG_NAME, "");
+        if (TextUtils.isEmpty(logName)) {
+            logName = Logger.getNewLogName();
+            setExtLogName(logName);
+        }
+        return logName;
+    }
+
     public void setLogName(String logName) {
         sp.edit().putString(KEY_LIB_XM_LOG_NAME, logName).commit();
+    }
+
+    public void setExtLogName(String logName) {
+        sp.edit().putString(KEY_LIB_XM_EXT_LOG_NAME, logName).commit();
     }
 
 }

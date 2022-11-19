@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
         Logger.d(FileUtils.getSystemCachePath());
         Logger.f("test");
         Logger.f("hello");
+        Logger.ext("hello");
+        Logger.ext("alan");
 
 
     }

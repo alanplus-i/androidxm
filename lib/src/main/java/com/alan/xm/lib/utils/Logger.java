@@ -20,9 +20,11 @@ public class Logger {
     private static final int STACK_TRACE = 4;
 
     private static String logFile;
+    private static String extLogFile;
 
     static {
         logFile = SpUtils.getInstance().getLogName();
+        extLogFile = SpUtils.getInstance().getExtLogName();
     }
 
     /**
@@ -87,7 +89,8 @@ public class Logger {
     }
 
     /**
-     * print log to file
+     * print log to file<br>
+     * 保存路径 /data/user/0/package_name/app_xm_logs
      *
      * @param message text content
      */
@@ -95,26 +98,64 @@ public class Logger {
         if (isEnable()) {
             ThreadExecutors.singleExecutor(() -> {
                 String logs = FileUtils.getSystemPath("xm_logs");
-                String path = logs + "/" + logFile;
-
-                File file = new File(path);
-                if (file.exists() && file.length() > 10 * 1024 * 1024) {
-                    logFile = getNewLogName();
+                String name = getLogFile(logs, logFile);
+                if (!TextUtils.isEmpty(name) && !name.equals(logFile)) {
                     SpUtils.getInstance().setLogName(logFile);
-                    path = logs + "/" + logFile;
                 }
-                String content = "[" +
-                        TimeUtils.getCurrentTimeStr("yyyy-MM-dd hh:mm:ss") +
-                        "] " +
-                        message +
-                        "\n";
-                Logger.d(path);
-                Logger.d(content);
-                boolean b = FileUtils.write(content, path, true);
-                d("file log recoding:" + b);
+                String path = logs + "/" + logFile;
+                writeFile(message, path, true);
             });
 
         }
+    }
+
+
+    /**
+     * print log to external file<br>
+     * 保存路径 /storage/sdcard/Android/data/package_name/xm_logs
+     *
+     * @param message text content
+     */
+    public static void ext(String message) {
+        if (isEnable()) {
+            ThreadExecutors.singleExecutor(() -> {
+                String logs = FileUtils.getExtFilePath("xm_logs");
+                d("old:" + extLogFile);
+                String name = getLogFile(logs, extLogFile);
+                if (!TextUtils.isEmpty(name) && !name.equals(extLogFile)) {
+                    extLogFile = name;
+                    SpUtils.getInstance().setExtLogName(extLogFile);
+                }
+                d("new:" + extLogFile);
+                String path = logs + "/" + extLogFile;
+                d("path:" + path);
+                writeFile(message, path, true);
+            });
+
+        }
+    }
+
+    private static String getLogFile(String path, String name) {
+        String filePath = path + "/" + name;
+        File file = new File(filePath);
+        if (file.exists() && file.length() > 10 * 1024 * 1024) {
+            Logger.d(file.length());
+            name = getNewLogName();
+
+        }
+        return name;
+    }
+
+    private static void writeFile(String message, String path, boolean isAppend) {
+        String content = "[" +
+                TimeUtils.getCurrentTimeStr("yyyy-MM-dd HH:mm:ss") +
+                "] " +
+                message +
+                "\n";
+        Logger.d(path);
+        Logger.d(content);
+        boolean b = FileUtils.write(content, path, isAppend);
+        d("file log recoding:" + b);
     }
 
     private static boolean checkParams(String... message) {
