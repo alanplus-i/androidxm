@@ -101,6 +101,7 @@ public class Logger {
                 String name = getLogFile(logs, logFile);
                 if (!TextUtils.isEmpty(name) && !name.equals(logFile)) {
                     SpUtils.getInstance().setLogName(logFile);
+                    logFile = name;
                 }
                 String path = logs + "/" + logFile;
                 writeFile(message, path, true);
@@ -120,15 +121,12 @@ public class Logger {
         if (isEnable()) {
             ThreadExecutors.singleExecutor(() -> {
                 String logs = FileUtils.getExtFilePath("xm_logs");
-                d("old:" + extLogFile);
                 String name = getLogFile(logs, extLogFile);
                 if (!TextUtils.isEmpty(name) && !name.equals(extLogFile)) {
                     extLogFile = name;
                     SpUtils.getInstance().setExtLogName(extLogFile);
                 }
-                d("new:" + extLogFile);
                 String path = logs + "/" + extLogFile;
-                d("path:" + path);
                 writeFile(message, path, true);
             });
 
@@ -163,7 +161,7 @@ public class Logger {
     }
 
     private static boolean isEnable() {
-        return LApplication.app != null && LApplication.app.getConfig().isLog();
+        return LApplication.getConfig() != null && LApplication.getConfig().isLog();
     }
 
     public static String getNewLogName() {

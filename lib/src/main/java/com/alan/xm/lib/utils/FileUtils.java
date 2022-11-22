@@ -59,23 +59,8 @@ public class FileUtils {
         return false;
     }
 
-
     /**
-     * 写入文件
-     *
-     * @param content  文本内容
-     * @param filePath 文件名
-     * @param isAppend 是否追加
-     * @return 是否写入成功
-     */
-    public static boolean writeToSystem(String content, String filePath, boolean isAppend) {
-
-
-        return true;
-    }
-
-    /**
-     * 显示系统目录
+     * 获取系统目录
      *
      * @return /data/data/package_name
      */

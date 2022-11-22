@@ -24,7 +24,10 @@ public class LApplication extends Application {
         this.config = config;
     }
 
-    public LibConfig getConfig() {
-        return null == config ? LibConfig.builder().build() : config;
+    public static LibConfig getConfig() {
+        if (app != null) {
+            return null == app.config ? LibConfig.builder().build() : app.config;
+        }
+        return null;
     }
 }
